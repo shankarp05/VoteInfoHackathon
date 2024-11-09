@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useState } from "preact/hooks";
 import Chatbox from "../components/Chatbox.tsx";
 
@@ -32,16 +31,14 @@ export default function ChatboxIsland() {
   };
 
   return (
-    <div>
-      <div class="chat-container">
-        <Chatbox onSubmit={handleSubmit} />
-        <div class="message-list">
-          {messages.map((msg, index) => (
-            <div key={index} class="message">
-              {msg}
-            </div>
-          ))}
-        </div>
+    <div class="chat-container">
+      <Chatbox onSubmit={handleSubmit} />
+      <div class="message-list">
+        {messages.map((msg, index) => (
+          <div key={index} class="message">
+            {msg}
+          </div>
+        ))}
       </div>
     </div>
   );
