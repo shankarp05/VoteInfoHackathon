@@ -2,66 +2,141 @@
 @tailwind components;
 @tailwind utilities;
 
+.main-container {
+  max-width: 100%;
+  background: linear-gradient(to bottom right, #f0f4ff, #cce3ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  min-height: 100vh;
+  position: relative;
+}
+
+.main-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.transparenttextures.com/patterns/skulls.png'); /* Subtle overlay pattern */
+  opacity: 0.05; /* Adjust opacity for subtle effect */
+  z-index: 0;
+  pointer-events: none;
+}
+
 .chat-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .chat-messages {
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: #f9f9f9;
-  }
-  
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #ddd;
-    padding: 10px;
-    background-color: #fff;
-  }
-  
-  .input-field {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-right: 5px;
-  }
-  
-  .send-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .send-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .message-list {
-    padding: 10px;
-  }
-  
-  .message {
-    margin: 5px 0;
-    padding: 8px;
-    border-radius: 5px;
-  }
-  
-  .message:nth-child(odd) {
-    background-color: #e1f5fe;
-  }
-  
-  .message:nth-child(even) {
-    background-color: #f1f8e9;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.chatbox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.chat-messages {
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+.chat-input {
+  display: flex;
+  align-items: flex-start; /* Aligns the textarea with button */
+  border-top: 1px solid #ddd;
+  padding: 8px;
+  background-color: #fafafa;
+  position: relative;
+}
+
+.input-field {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-right: 8px;
+  resize: none; /* Disable manual resizing */
+  overflow: hidden; /* Hide overflow to support auto-expanding */
+  outline: none;
+  transition: border-color 0.3s;
+  font-size: 1rem;
+}
+
+
+.input-field:focus {
+  border-color: #007bff;
+}
+
+
+.send-button {
+  padding: 10px 15px; /* Adjust as needed */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 35px; /* Fixed height */
+  align-self: center; /* Center the button horizontally */
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center; /* Horizontally center the text */
+  align-items: center; /* Vertically center the text */
+  font-size: 1rem; /* Ensure the text fits well */
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
+
+.message-list {
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.message {
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 8px;
+  line-height: 1.4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message:nth-child(odd) {
+  background-color: #e1f5fe;
+  color: #0277bd;
+}
+
+.message:nth-child(even) {
+  background-color: #f1f8e9;
+  color: #33691e;
+}
+
+/* Character counter fixed below the input field */
+.character-counter {
+    position: absolute;
+    bottom: -25px; /* Position it directly below the chatbox */
+    right: 10px;
+    font-size: 0.85rem;
+    color: #888;
+    background-color: white;
+    padding: 2px 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    z-index: 10;
+}
