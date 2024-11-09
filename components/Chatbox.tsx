@@ -1,22 +1,31 @@
-import { useState, useRef } from "preact/hooks";
+// Chatbox.tsx
+import { useState, useRef, useEffect } from "preact/hooks";
 
 const MAX_CHAR_LIMIT = 4096;
 
-export default function Chatbox({ onSubmit }: { onSubmit: (message: string) => void }) {
-  const [message, setMessage] = useState("");
+export default function Chatbox({
+  onSubmit,
+  initialMessage = "", // New prop
+}: { 
+  onSubmit: (message: string) => void;
+  initialMessage?: string; 
+}) {
+  const [message, setMessage] = useState(initialMessage);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    setMessage(initialMessage); // Update the message when initialMessage changes
+  }, [initialMessage]);
 
   const handleInput = (e: Event) => {
     const target = e.currentTarget as HTMLTextAreaElement;
-    // Ensure character limit is not exceeded
     if (target.value.length <= MAX_CHAR_LIMIT) {
       setMessage(target.value);
     }
 
-    // Auto-resize textarea based on content
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto"; // Reset height to auto to recalculate
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to scroll height
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
 
@@ -30,7 +39,7 @@ export default function Chatbox({ onSubmit }: { onSubmit: (message: string) => v
           placeholder="Type your message here..."
           value={message}
           onInput={handleInput}
-          rows={1} // Minimum rows, will expand based on content
+          rows={1}
         />
         <button 
           class="send-button"
@@ -38,14 +47,13 @@ export default function Chatbox({ onSubmit }: { onSubmit: (message: string) => v
             onSubmit(message);
             setMessage("");
             if (textareaRef.current) {
-              textareaRef.current.style.height = "auto"; // Reset height after sending message
+              textareaRef.current.style.height = "auto";
             }
           }}
         >
           Send
         </button>
       </div>
-      {/* Character counter placed outside the input area */}
       <div class="character-counter">
         {message.length} / {MAX_CHAR_LIMIT}
       </div>
