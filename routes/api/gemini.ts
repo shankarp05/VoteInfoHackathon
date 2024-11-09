@@ -22,9 +22,11 @@ export const handler: Handlers = {
     try {
       // Parse the incoming request to get the user's message
       const { message } = await req.json();
+      let promptEngineering = "Extract the New York politican's First and Last name from the following message.  Try to account for user typos, nicknames, and middle names.  We just need the first and last name seperated by a space: \' " + message;
+      promptEngineering = promptEngineering + ' \'';
 
       // Pass the message to the answerQuestion function
-      const answer = await answerQuestion(message);
+      const answer = await answerQuestion(promptEngineering);
       const JSONResponse = JSON.parse(answer);
 
       // Extract the AI's response text from the JSON
