@@ -15,6 +15,16 @@
   position: relative;
 }
 
+.button-container {
+  max-width: 100%;
+  background: linear-gradient(to bottom right, #f0f4ff, #cce3ff);
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  min-height: 100vh;
+  position: relative;
+}
+
 
 .chat-container {
   display: flex;
