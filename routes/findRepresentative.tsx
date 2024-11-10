@@ -17,7 +17,7 @@ export default function Home() {
         <LocationButton />
         
         <footer class="mt-8 text-gray-500 text-sm">
-          Powered by Deno Fresh
+        Powered by Deno Fresh🍋 and Gemini
         </footer>
       </div>
     </div>
