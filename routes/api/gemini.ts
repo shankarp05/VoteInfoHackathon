@@ -91,8 +91,12 @@ export const handler: Handlers = {
       - What is the politician’s stance on [policy issue]?
       - What bills has the politician supported regarding [specific policy]?
       - Can you summarize the politician’s recent legislative actions?
-      
-      Remove weird * symbols from the input or - symbols from the input in the final answer to format it properly. Answer the following question based on the provided bills:
+      - Remove any stray symbols or unnecessary characters from the response.
+      - Use complete sentences and clear formatting for easy reading.
+      - Avoid using unnecessary symbols like * or -.
+      - no bullet points, should be a paragraph or multiple sentences
+
+      Answer the following question based on the provided bills:
       
       Question: ${message}  // User's query
       `;
