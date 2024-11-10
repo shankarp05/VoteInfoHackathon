@@ -1,7 +1,7 @@
 import { FreshContext } from "$fresh/server.ts";
 import { Handlers } from "$fresh/server.ts";
 
-const OPEN_STATES_API_KEY='1aec2c4d-b5d8-4068-8697-db3ab64d0b16'
+const OPEN_STATES_API_KEY= Deno.env.get("OPEN_STATES_API_KEY") || "";
 
 export interface Representative {
     name:string;
