@@ -11,8 +11,8 @@ import * as $findRepresentative from "./routes/findRepresentative.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $ChatboxIsland from "./islands/ChatboxIsland.tsx";
-import * as $Counter from "./islands/Counter.tsx";
 import * as $Location from "./islands/Location.tsx";
+import * as $StartingPrompts from "./islands/StartingPrompts.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -28,8 +28,8 @@ const manifest = {
   },
   islands: {
     "./islands/ChatboxIsland.tsx": $ChatboxIsland,
-    "./islands/Counter.tsx": $Counter,
     "./islands/Location.tsx": $Location,
+    "./islands/StartingPrompts.tsx": $StartingPrompts,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
