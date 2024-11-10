@@ -9,7 +9,7 @@ export default function Home() {
         <a href="/homeRedirect">
           <img src="/legisLinkLogo.png" alt="LegisLink Logo" class="absolute top-4 left-4 h-20" />
         </a>
-        <h1 class="text-3xl font-bold text-blue-700 mb-2 text-center pt-7">Welcome to LegisLink</h1>
+        <h1 class="text-3xl font-bold text-blue-700 mb-2 text-center pt-7">Ask Me About Your Elected Officials!</h1>
         <p class="text-gray-600 text-center">Chat with our AI-powered assistant below.</p>
         <div class="absolute top-4 right-4 h-20">
           <Button text="Find Your Representatives" href="/findRepresentativeRedirect" />
