@@ -5,9 +5,9 @@ import { xml2js } from "https://deno.land/x/xml2js@1.0.0/mod.ts";
 
 
 
-const GOOGLE_API_KEY = "AIzaSyBrTCrL_Z7Vgd9S-kYgOCJats_bXce3tNM";
-const NY_SENATE_API_KEY = "y5XK9WxIBC3OciBwKHOFb62EUxPvoHAJ";
-const CONGRESS_API_KEY = "BHhciy7fLzdfovdTFXSGyAYxmtOWuuJKWroXhQm8";
+const GOOGLE_API_KEY = Deno.env.get("GOOGLE_API_KEY") || "";
+const NY_SENATE_API_KEY = Deno.env.get("NY_SENATE_API_KEY") || "";
+const CONGRESS_API_KEY = Deno.env.get("CONGRESS_API_KEY") || "";
 
 interface Member {
   name: {
