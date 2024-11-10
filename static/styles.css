@@ -2,10 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-header {
-    position: relative;
-    top: -150px; /* Adjust this value to move it closer to the top */
-  }
+.background {
+
+  background-color: #333333;
+
+}
 
 .main-container {
   max-width: 100%;

@@ -39,7 +39,7 @@ export default function ChatboxIsland() {
 
   return (
     <div>
-      <div style="position: relative; top: -100px;">
+      <div class="pb-8">
         <StartingPrompts onClick={onButtonClick} />
       </div>
       <div class="chat-container">
