@@ -5,7 +5,7 @@ import { xml2js } from "https://deno.land/x/xml2js@1.0.0/mod.ts";
 
 
 
-const GOOGLE_API_KEY = "AIzaSyBrTCrL_Z7Vgd9S-kYgOCJats_bXce3tNM"; // Ensure your API key is correctly loaded
+const GOOGLE_API_KEY = "AIzaSyBrTCrL_Z7Vgd9S-kYgOCJats_bXce3tNM";
 const NY_SENATE_API_KEY = "y5XK9WxIBC3OciBwKHOFb62EUxPvoHAJ";
 const CONGRESS_API_KEY = "BHhciy7fLzdfovdTFXSGyAYxmtOWuuJKWroXhQm8";
 
@@ -180,7 +180,7 @@ export const handler: Handlers = {
     try {
       // Parse the incoming request to get the user's message
       const { message } = await req.json();
-      let promptEngineering = "Extract the New York politican's First and Last name from the following message.  Try to account for user typos, nicknames, and middle names.  We just need the first and last name seperated by a space: \' " + message;
+      let promptEngineering = "Extract the New York politican's First and Last name from the following message.  Try to account for user typos, nicknames, and middle names.  If the name you have is a nickname, return their legal name (for example: schumer->chuck schumer->charles schumer). We just need the first and last name seperated by a space: \' " + message;
       promptEngineering = promptEngineering + ' \'';
 
       // Pass the message to the answerQuestion function
@@ -189,6 +189,8 @@ export const handler: Handlers = {
 
       // Extract the AI's response text from the JSON
       const politicianName = JSONResponse.candidates[0].content.parts[0].text;
+      console.log("Parsed politician name:", politicianName);
+
 
       let bills = await getBillsData(politicianName);
 
@@ -229,6 +231,7 @@ export const handler: Handlers = {
       
       
       const finalAnswer = await answerQuestion(combinedResponse);
+      console.log(finalAnswer)
       const JSONFinalResponse = JSON.parse(finalAnswer);
 
       const finalText = JSONFinalResponse.candidates[0].content.parts[0].text;
