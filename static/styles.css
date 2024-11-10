@@ -2,11 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.background {
 
-  background-color: #333333;
-
-}
 
 .main-container {
   max-width: 100%;
