@@ -35,29 +35,28 @@ const saveNewYorkRepresentatives = async(data: any)=>{
   // Loop through each person in the results array
   for (const person of data.results) {
     // Check if the jurisdiction's name is "New York"
-    if (person.jurisdiction.name === "New York") {
-      // Use the person's name as a key and save their data to Deno KV
-      const rep: Representative = {
-        name: person.name,
-        party: person.party,
-        title: person.current_role.title,
-        district: person.current_role.district,
-        jurisdiction: person.jurisdiction.name,
-        image: person.image,
-        email: person.email,
-      };
-  
-      // Check if the representative already exists in repList
-      const alreadyExists = repList.some(
-        (existingRep) =>
-          existingRep.name === rep.name && existingRep.district === rep.district
-      );
-  
-      // Add to repList only if they are not already in it
-      if (!alreadyExists) {
-        repList.push(rep);
-      }
+    // Use the person's name as a key and save their data to Deno KV
+    const rep: Representative = {
+      name: person.name,
+      party: person.party,
+      title: person.current_role.title,
+      district: person.current_role.district,
+      jurisdiction: person.jurisdiction.name,
+      image: person.image,
+      email: person.email,
+    };
+
+    // Check if the representative already exists in repList
+    const alreadyExists = repList.some(
+      (existingRep) =>
+        existingRep.name === rep.name && existingRep.district === rep.district
+    );
+
+    // Add to repList only if they are not already in it
+    if (!alreadyExists) {
+      repList.push(rep);
     }
+    
   }
 
   console.log("Finished processing New York representatives.");
