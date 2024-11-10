@@ -20,32 +20,47 @@ const answerQuestion = async (userInput: string) => {
 
 
 const getBillsData = async (politicianName: string) => {
-  try {
-    const encodedName = encodeURIComponent(politicianName);
-    const url = `https://legislation.nysenate.gov/api/3/bills/search?term=sponsor.member.fullName:"${encodedName}"&sort=status.actionDate:DESC&key=${NY_SENATE_API_KEY}`;
-    
+  let allBillsString = "";
+  let offsetStart = 1;
+  const limit = 25; // Default limit per request
+  const total = await getTotalBillsCount(politicianName); // Get total results count
+  
+  while (offsetStart <= total) {
+    const url = `https://legislation.nysenate.gov/api/3/bills/search?term=sponsor.member.fullName:"${encodeURIComponent(politicianName)}"&sort=status.actionDate:DESC&offset=${offsetStart}&limit=${limit}&key=${NY_SENATE_API_KEY}`;
+
     const response = await fetch(url);
     const data = await response.json();
-    
-    if (!data.result || !data.result.items) {
-      return "";
+
+    if (data.success && data.result && data.result.items) {
+      // Create a concatenated string of bill titles and summaries
+      const billsString = data.result.items
+        .map((item: any) => {
+          const title = item.result.title || "No title available";
+          const summary = item.result.summary || "No summary available";
+          return `Title: ${title}, Summary: ${summary}`;
+        })
+        .join("; ");
+      
+      // Append the bills to the overall bills string
+      allBillsString += billsString;
     }
 
-    // Create concatenated string of titles and summaries
-    const billsString = data.result.items
-      .map((item: any) => {
-        const title = item.result.title || "No title available";
-        const summary = item.result.summary || "No summary available";
-        return `Title: ${title}, Summary: ${summary}`;
-      })
-      .join("; ");
-
-    return billsString;
-  } catch (error) {
-    console.error("Error fetching bills:", error);
-    return "";
+    // Move to the next page
+    offsetStart += limit;
   }
-}
+
+  return allBillsString;
+};
+
+const getTotalBillsCount = async (politicianName: string) => {
+  const url = `https://legislation.nysenate.gov/api/3/bills/search?term=sponsor.member.fullName:"${encodeURIComponent(politicianName)}"&sort=status.actionDate:DESC&key=${NY_SENATE_API_KEY}`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.total; // Total count of results
+};
+
+
 
 export const handler: Handlers = {
   async POST(req: Request, _ctx: FreshContext): Promise<Response> {
@@ -64,8 +79,33 @@ export const handler: Handlers = {
 
       const bills = await getBillsData(politicianName);
       
+      const combinedResponse = `
+      Politician: ${politicianName}
+      
+      Bills and Policies:
+      ${bills}
+      
+      You are now a policy expert. Based on the bills listed above, answer any question related to the politician’s positions, actions, or policies. You can provide summaries or explanations related to the bills or the politician’s overall political stance. Be sure to use the bill titles and summaries to inform your answers.
+      
+      Example questions:
+      - What is the politician’s stance on [policy issue]?
+      - What bills has the politician supported regarding [specific policy]?
+      - Can you summarize the politician’s recent legislative actions?
+      
+      Remove weird * symbols from the input or - symbols from the input in the final answer to format it properly. Answer the following question based on the provided bills:
+      
+      Question: ${message}  // User's query
+      `;
+      
+      
+      const finalAnswer = await answerQuestion(combinedResponse);
+      const JSONFinalResponse = JSON.parse(finalAnswer);
+
+      const finalText = JSONFinalResponse.candidates[0].content.parts[0].text;
+
+
       // Return the AI's response text as JSON
-      return new Response(JSON.stringify({ reply: politicianName }), {
+      return new Response(JSON.stringify({ reply: finalText }), {
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
