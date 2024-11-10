@@ -1,6 +1,5 @@
-import { useState, useEffect} from "preact/hooks";
-import {Representative} from "../routes/api/civicsAPI.ts"
-
+import { useState, useEffect } from "preact/hooks";
+import { Representative } from "../routes/api/civicsAPI.ts";
 
 export default function LocationButton() {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -25,19 +24,18 @@ export default function LocationButton() {
 
             if (res.ok) {
               const result = await res.json();
-              console.log(result)
+              console.log(result);
               if (result) {
-                  setRepresentatives(result.reps); // Extract reps array
-
-                }
-              } else {
-                setErrorMessage("Failed to load representative data.");
-                console.error("error occured while fetching representative");
+                setRepresentatives(result.reps); // Extract reps array
               }
-            } catch (e) {
-                setErrorMessage("Representative lookup unsuccessful.");
-                console.error("An error occurred while fetching the representative.");
+            } else {
+              setErrorMessage("Failed to load representative data.");
+              console.error("Error occurred while fetching representative");
             }
+          } catch (e) {
+            setErrorMessage("Representative lookup unsuccessful.");
+            console.error("An error occurred while fetching the representative.");
+          }
         },
         () => {
           setErrorMessage("Location access denied or unavailable");
@@ -51,7 +49,7 @@ export default function LocationButton() {
   };
 
   return (
-    <div>
+    <div class="text-center">
       <button onClick={getLocation} class="bg-blue-500 text-white p-2 rounded mb-4">
         Get Location
       </button>
