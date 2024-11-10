@@ -9,11 +9,11 @@ export interface Representative {
     title: string;
     district: string;
     jurisdiction: string;
-    image: string;
+    image?: string;
     email: string;
   }
 
-let repList: Representative[] = [];
+const repList: Representative[] = [];
 
 const findRepresentatives = async (lat: number, lng:number) => {
     const resp = await fetch(`https://v3.openstates.org/people.geo?lat=${lat}&lng=${lng}&apikey=${OPEN_STATES_API_KEY}`, {
