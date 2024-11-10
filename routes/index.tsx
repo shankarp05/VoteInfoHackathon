@@ -20,7 +20,7 @@ export default function Home() {
         <p>Try These Starter Prompts!</p>
         <ChatboxIsland />
         <footer class="mt-8 text-gray-500 text-sm">
-          Powered by Deno Fresh🍋 and Gemini
+          Powered by Deno Fresh🍋 and Gemini ✦
         </footer>
       </div>
     </div>
