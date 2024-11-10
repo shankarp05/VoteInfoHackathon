@@ -2,7 +2,7 @@
 import { Button } from "../components/Button.tsx";
 
 export default function ButtonIsland({ onClick }: { onClick: (text: string) => void }) {
-  const buttonText = "What are Jacob Ashby's Views on Climate Change"; // The text to populate the chatbox with
+  const buttonText = "What are Jake Ashby's Views on Highways"; // The text to populate the chatbox with
 
   return (
     <Button
