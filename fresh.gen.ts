@@ -8,7 +8,9 @@ import * as $api_civicsAPI from "./routes/api/civicsAPI.ts";
 import * as $api_gemini from "./routes/api/gemini.ts";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $findRepresentative from "./routes/findRepresentative.tsx";
+import * as $findRepresentativeRedirect from "./routes/findRepresentativeRedirect.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
+import * as $homeRedirect from "./routes/homeRedirect.ts";
 import * as $index from "./routes/index.tsx";
 import * as $ChatboxIsland from "./islands/ChatboxIsland.tsx";
 import * as $Location from "./islands/Location.tsx";
@@ -23,7 +25,9 @@ const manifest = {
     "./routes/api/gemini.ts": $api_gemini,
     "./routes/api/joke.ts": $api_joke,
     "./routes/findRepresentative.tsx": $findRepresentative,
+    "./routes/findRepresentativeRedirect.ts": $findRepresentativeRedirect,
     "./routes/greet/[name].tsx": $greet_name_,
+    "./routes/homeRedirect.ts": $homeRedirect,
     "./routes/index.tsx": $index,
   },
   islands: {
