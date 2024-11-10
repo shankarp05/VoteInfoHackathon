@@ -1,8 +1,30 @@
 import { FreshContext } from "$fresh/server.ts";
 import { Handlers } from "$fresh/server.ts";
+import { parse } from "$std/path/parse.ts";
+import { xml2js } from "https://deno.land/x/xml2js@1.0.0/mod.ts";
+
+
 
 const GOOGLE_API_KEY = "AIzaSyBrTCrL_Z7Vgd9S-kYgOCJats_bXce3tNM"; // Ensure your API key is correctly loaded
 const NY_SENATE_API_KEY = "y5XK9WxIBC3OciBwKHOFb62EUxPvoHAJ";
+const CONGRESS_API_KEY = "BHhciy7fLzdfovdTFXSGyAYxmtOWuuJKWroXhQm8";
+
+interface Member {
+  name: {
+    _text: string;
+  };
+  bioguideId: {
+    _text: string;
+  };
+}
+
+interface Members {
+  member: Member | Member[];
+}
+
+interface ParsedData {
+  members?: Members;
+}
 
 // Modified function to take in user input as an argument
 const answerQuestion = async (userInput: string) => {
@@ -61,6 +83,97 @@ const getTotalBillsCount = async (politicianName: string) => {
 };
 
 
+const getBioguideId = async (politicianName: string): Promise<string | null> => {
+  try {
+    const url = `https://api.congress.gov/v3/member/NY?api_key=${CONGRESS_API_KEY}`;
+    const response = await fetch(url);
+    const rawData = await response.text();
+    
+    // Log the raw response to see what we're getting
+    // console.log('Raw API Response:', rawData);
+    
+    // Try parsing as JSON first since the API might return JSON
+    try {
+      const jsonData = JSON.parse(rawData);
+      // console.log('Parsed as JSON:', jsonData);
+      
+      // If it's JSON, handle accordingly
+      if (jsonData.members) {
+        console.log("Found members in JSON");
+        const members = jsonData.members
+        
+
+
+  // console.log("Gillibrand, Kirsten E.".toLowerCase().includes("kirsten gillibrand"))
+
+        for (const member of members) {
+          const newPol = politicianName.split(' ').reverse().join(' ').trim();
+          const noComma = member.name.replaceAll(',', '').trim();
+
+
+
+          if (noComma && noComma.toLowerCase().includes(newPol.toLowerCase())) {
+            return member.bioguideId;
+          }
+        }
+      }
+    } catch (jsonError) {
+      // If JSON parsing fails, try XML
+      // console.log('Not JSON, trying XML parsing');
+      const parsedData = xml2js(rawData, { compact: true });
+      // console.log('Parsed XML Data:', parsedData);
+      
+      if (parsedData && typeof parsedData === 'object' && 'members' in parsedData) {
+        // console.log("Found members object in XML");
+        const members = parsedData.members;
+        
+        if (members && typeof members === 'object' && 'member' in members) {
+          // console.log("yess - found member in XML");
+          const memberList = Array.isArray(members.member) ? members.member : [members.member];
+          
+          for (const member of memberList) {
+            const name = member?.name?._text || '';
+            // console.log('Checking member name:', name);
+            if (name.toLowerCase().includes(politicianName.toLowerCase())) {
+              return member?.bioguideId?._text?.trim() || null;
+            }
+          }
+        }
+      }
+    }
+    
+    console.log('No matching member found');
+    return null;
+
+  } catch (error) {
+    console.error('Error in getBioguideId:', error);
+    return null;
+  }
+};
+
+
+const getCongressBillsData = async (bioguideId: string) => {
+  const url = `https://api.congress.gov/v3/member/${bioguideId}/sponsored-legislation?api_key=${CONGRESS_API_KEY}`;
+  const response = await fetch(url);
+  const data = await response.json();
+
+  let allBillsString = "";
+  if (data && data.sponsoredLegislation) {
+    // Concatenate each bill's title and summary to a single string
+    allBillsString = data.sponsoredLegislation
+      .map((bill: any) => {
+        const title = bill.title || "No title available";
+        const summary = bill.latestAction?.text || "No summary available";
+        return `Title: ${title}, Summary: ${summary}`;
+      })
+      .join("; "); // Each bill's title and summary is separated by a semicolon
+  }
+
+  console.log(allBillsString)
+
+  return allBillsString;
+};
+
 
 export const handler: Handlers = {
   async POST(req: Request, _ctx: FreshContext): Promise<Response> {
@@ -77,7 +190,19 @@ export const handler: Handlers = {
       // Extract the AI's response text from the JSON
       const politicianName = JSONResponse.candidates[0].content.parts[0].text;
 
-      const bills = await getBillsData(politicianName);
+      let bills = await getBillsData(politicianName);
+
+      
+  
+
+      if (!bills || bills.length === 0) {
+        console.log("yessbefore")
+        const bioguideID = await getBioguideId(politicianName);
+        
+        if (bioguideID) {
+          bills = await getCongressBillsData(bioguideID);
+        }
+      }
       
       const combinedResponse = `
       Politician: ${politicianName}
@@ -95,6 +220,7 @@ export const handler: Handlers = {
       - Use complete sentences and clear formatting for easy reading.
       - Avoid using unnecessary symbols like * or -.
       - no bullet points, should be a paragraph or multiple sentences
+      - no bold or italics either
 
       Answer the following question based on the provided bills:
       

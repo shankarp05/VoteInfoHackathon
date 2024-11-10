@@ -39,7 +39,7 @@ export default function Chatbox({
           placeholder="Type your message here..."
           value={message}
           onInput={handleInput}
-          rows={1}
+          rows={4}
         />
         <button 
           class="send-button"
